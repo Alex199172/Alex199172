@@ -10,11 +10,14 @@
       <div class="header__score">
         | Рекорды |
       </div>
-     <Modal  />
+     <Modal
+     v-show="this.$store.state.returnValueCards.length === 10 ? showModal = true : false"
+     />
       <Timer ref="timer"/>
     </div>
     <div class="header__btn_center">
       <button
+      v-show="showCard === true"
       class="header__btn btn"
       type="button"
       @click="onRestartClick"
@@ -25,6 +28,7 @@
     <div class="game__fone">
       <div class="card__wrapper">
         <Card
+        v-show="showCard === true"
         v-for="(cardsItem, index) in cards" :key="index"
         :cards="cards"
         :index="index"
@@ -58,13 +62,15 @@ export default {
         'palette',
         'science',
       ],
-      showModal: false
+      showModal: false,
+      showCard: false
     }
   },
   methods: {
     onStartClick() {
       this.$refs.timer.startTimer()
       this.shuffle()
+      this.showCard = true
     },
     onRestartClick() {
       this.$refs.timer.restartTimer()

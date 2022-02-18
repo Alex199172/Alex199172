@@ -3,12 +3,12 @@
   @click="compaireCard"
   >
     <div class="card__front card center"
-    :class="classActive.card__front_active === true ? 'card__front_active' : ''"
+    :class="$store.state.card__front_active === true ? 'card__front_active' : ''"
     >
         <img :src="`/assets/img/logo.png`">
     </div>
     <div class="card__back card"
-    :class="classActive.card__back_active === true ? 'card__back_active' : ''"
+    :class="$store.state.card__back_active === true ? 'card__back_active' : ''"
     >
         <img class="card__img" :src="`/assets/img/${cards[index]}.png`">
     </div>
@@ -21,49 +21,46 @@ export default {
   props:['cards', 'index'],
   data() {
     return {
-      classActive: {
-        card__front_active: false,
-        card__back_active: false,
-      },
-      longTimeout: null,
-      shortTimeout: null
+
     }
   },
   methods: {
-    turnCard() {
-        this.classActive.card__front_active = true
-        this.classActive.card__back_active = true
-      },
-    returnCard() {
-        this.classActive.card__front_active = false
-        this.classActive.card__back_active = false
-
-        this.$store.commit('removeValueCard')
-      },
+    // turnCard() {
+    //     this.classActive.card__front_active = true
+    //     this.classActive.card__back_active = true
+    //   },
+    // returnCard() {
+    //     this.classActive.card__front_active = false
+    //     this.classActive.card__back_active = false
+    //
+    //     this.$store.commit('removeValueCard')
+    //   },
     compaireCard() {
       if(this.$store.state.valueCards.length < 2 ) {
-        this.turnCard()
+        this.$store.commit('turnCard')
         this.$store.commit('addValueCard', this.cards[this.index])
       }
 
       if(this.$store.state.valueCards.length === 1 ) {
-        this.longTimeout = setTimeout(this.returnCard, 5000)
+        this.$store.commit('startLongTimeout', this.returnCard)
       }
 
       if(this.$store.state.valueCards.length === 2 && this.$store.state.valueCards[0] != this.$store.state.valueCards[1]) {
-         clearTimeout(this.longTimeout)
-         this.shortTimeout = setTimeout(this.returnCard, 2000)
+         this.$store.commit('startShortTimeout', this.returnCard)
+
       }
 
       if(this.$store.state.valueCards.length === 2 && this.$store.state.valueCards[0] == this.$store.state.valueCards[1]) {
-         clearTimeout(this.longTimeout)
-         clearTimeout(this.shortTimeout)
-
+         this.$store.commit('stopLongTimeout')
+         this.$store.commit('stopShortTimeout')
+         this.$store.commit('removeValueCard')
+         this.$store.commit('addReturnValueCard', this.cards[this.index])
       }
 
     console.log(this.longTimeout)
     console.log(this.shortTimeout)
     console.log(this.$store.state.valueCards)
+    console.log(this.$store.state.returnValueCards)
    }
   }
 }

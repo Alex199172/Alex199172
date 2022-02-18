@@ -1,12 +1,12 @@
 <template>
-  <div class="modal__wrapper" v-if="showModal==true">
+  <div class="modal__wrapper">
     <div class="modal__substrate">
     <div class="modal">
       <div class="modal__header">
         <button
         type="button"
         class="modal__close"
-        @click="showModal = !showModal"
+        @click="showModal = false"
         >
           &times;
         </button>
@@ -38,7 +38,7 @@
   export default {
     data() {
       return {
-        showModal: true,
+        showModal: false,
         name: '',
         result: []
       }
